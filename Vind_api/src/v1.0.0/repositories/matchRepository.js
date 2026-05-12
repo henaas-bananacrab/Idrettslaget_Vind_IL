@@ -2,7 +2,15 @@ const db = require('../database/db');
 
 async function getAllMatches() {
     try {
-        const [rows] = await db.execute('SELECT * FROM `match`');
+        const [rows] = await db.execute(`
+            SELECT 
+                m.*,
+                t1.team_name AS team_name_1,
+                t2.team_name AS team_name_2
+            FROM \`match\` m
+            JOIN team t1 ON m.team_id_1 = t1.team_id
+            JOIN team t2 ON m.team_id_2 = t2.team_id
+        `);
         return rows;
     } catch (error) {
         console.error('Error getting all matches:', error);
@@ -12,7 +20,16 @@ async function getAllMatches() {
 
 async function getMatchById(matchId) {
     try {
-        const [rows] = await db.execute('SELECT * FROM `match` WHERE match_id = ?', [matchId]);
+        const [rows] = await db.execute(`
+            SELECT 
+                m.*,
+                t1.team_name AS team_name_1,
+                t2.team_name AS team_name_2
+            FROM \`match\` m
+            JOIN team t1 ON m.team_id_1 = t1.team_id
+            JOIN team t2 ON m.team_id_2 = t2.team_id
+            WHERE m.match_id = ?
+        `, [matchId]);
         return rows[0];
     } catch (error) {
         console.error('Error getting match by ID:', error);

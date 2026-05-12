@@ -21,7 +21,7 @@ async function createTeamHandler(req, res) {
     try {
         const { team_name } = req.body;
 
-        if (!team_name || team_name.trim() === '') {
+        if (!team_name || team_name === '') {
             return res.status(400).json({
                 success: false,
                 message: 'team_name is required'

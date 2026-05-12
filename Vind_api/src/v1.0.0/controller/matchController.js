@@ -1,7 +1,7 @@
 const { getAllMatches, getMatchById, createMatch, updateMatchResult, deleteMatch } = require('../repositories/matchRepository');
 const { getTeamById } = require('../repositories/teamRepository');
 
-async function getAllMatchesHandler(req, res) {
+async function fetchAllMatches(req, res) {
     try {
         const matches = await getAllMatches();
         res.status(200).json({
@@ -18,7 +18,7 @@ async function getAllMatchesHandler(req, res) {
     }
 }
 
-async function getMatchByIdHandler(req, res) {
+async function fetchMatchById(req, res) {
     try {
         const { match_id } = req.params;
 
@@ -51,7 +51,7 @@ async function getMatchByIdHandler(req, res) {
     }
 }
 
-async function createMatchHandler(req, res) {
+async function addMatch(req, res) {
     try {
         const { team_id_1, team_id_2, time, result } = req.body;
 
@@ -98,6 +98,7 @@ async function createMatchHandler(req, res) {
             data: { match_id: matchId, team_id_1, team_id_2, time, result: result || null },
             message: 'Match created successfully'
         });
+        console.log('Match created successfully:', { match_id: matchId, team_id_1, team_id_2, time, result: result || null });
     } catch (error) {
         console.error('Error creating match:', error);
         res.status(500).json({
@@ -185,9 +186,9 @@ async function deleteMatchHandler(req, res) {
 }
 
 module.exports = {
-    getAllMatchesHandler,
-    getMatchByIdHandler,
-    createMatchHandler,
+    fetchAllMatches,
+    fetchMatchById,
+    addMatch,
     updateMatchHandler,
     deleteMatchHandler
 };

@@ -6,29 +6,31 @@ function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1];
     console.log("Auth header:", authHeader);
     console.log("Extracted token:", token);
+    
 
     if (!token) {
         return res.status(401).json({success: false, message: 'Access token is missing'});
     }
 
-    jwt.verify(token, SECRET_KEY, (err, employee) => {
+    jwt.verify(token, SECRET_KEY, (err, user) => {
         if (err) {
             return res.status(403).json({success: false, message: 'Invalid access token'});
         }
-        req.employee = employee;
-        console.log(employee);
+        req.user = user;
+        console.log(user);
         next();
     });
 }
 
 function authorizeRoles(...allowedRoles) {
+    console.log("Allowed roles for this route:", allowedRoles);
     
 
     return (req, res, next) => {
+        console.log("User role:", req.user.role);
 
-        console.log("Allowed roles for this route:", allowedRoles);
-        console.log("role from token:", req.employee.role);
-        if (!req.employee || !allowedRoles.includes(req.employee.role)) {
+        
+        if (!req.user || !allowedRoles.includes(req.user.role?.toLowerCase())) {
             return res.status(403).json({success: false, message: 'Forbidden: insufficient permissions'});
         }
         next();
