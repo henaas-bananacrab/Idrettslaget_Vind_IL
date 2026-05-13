@@ -61,6 +61,7 @@ export const matchApi = {
         api.post('/matches', { team_id_1, team_id_2, time, result: result || null }),
     updateMatchResult: (matchId, result) => api.put(`/matches/${matchId}`, { result }),
     deleteMatch: (matchId) => api.delete(`/matches/${matchId}`),
+    fetchUpcomingMatches: () => api.get('/matches/upcoming'),
 };
 
 export default api;

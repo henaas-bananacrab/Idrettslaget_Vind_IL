@@ -1,4 +1,4 @@
-const { getAllMatches, getMatchById, createMatch, updateMatchResult, deleteMatch } = require('../repositories/matchRepository');
+const { getAllMatches, getUpcomingMatches, getMatchById, createMatch, updateMatchResult, deleteMatch } = require('../repositories/matchRepository');
 const { getTeamById } = require('../repositories/teamRepository');
 
 async function fetchAllMatches(req, res) {
@@ -14,6 +14,23 @@ async function fetchAllMatches(req, res) {
         res.status(500).json({
             success: false,
             message: 'Error retrieving matches'
+        });
+    }
+}
+
+async function fetchUpcomingMatches(req, res) {
+    try {
+        const matches = await getUpcomingMatches();
+        res.status(200).json({
+            success: true,
+            data: matches,
+            message: 'Upcoming matches within 48 hours retrieved successfully'
+        });
+    } catch (error) {
+        console.error('Error getting upcoming matches:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error retrieving upcoming matches'
         });
     }
 }
@@ -187,6 +204,7 @@ async function deleteMatchHandler(req, res) {
 
 module.exports = {
     fetchAllMatches,
+    fetchUpcomingMatches,
     fetchMatchById,
     addMatch,
     updateMatchHandler,
