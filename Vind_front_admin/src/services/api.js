@@ -36,6 +36,12 @@ export const userApi = {
     register: (username, password, role) => api.post('/auth/register', { username, password, role }),
 };
 
+export const contactApi = {
+    getContactsByTeam: (teamId) => api.get(`/teams/${teamId}/contacts`),
+    createContact: (contact_name, contact_number, team_id) =>
+        api.post('/contacts', { contact_name, contact_number, team_id }),
+};
+
 export const teamApi = {
     getAllTeams: () => api.get('/teams'),
     createTeam: (name) => api.post('/teams', { team_name: name }),

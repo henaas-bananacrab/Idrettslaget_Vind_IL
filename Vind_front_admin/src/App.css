@@ -120,6 +120,12 @@ main {
   margin: 0;
 }
 
+.subtext {
+  color: var(--neutral);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .card-actions {
   display: flex;
   flex-wrap: wrap;

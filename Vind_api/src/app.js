@@ -6,6 +6,7 @@ const userRoutes = require('./v1.0.0/routes/userRoutes');
 const teamRoutes = require('./v1.0.0/routes/teamRoutes');
 const playerRoutes = require('./v1.0.0/routes/playerRoutes');
 const matchRoutes = require('./v1.0.0/routes/matchRoutes');
+const contactRoutes = require('./v1.0.0/routes/contactRoutes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/v1', userRoutes);
 app.use('/api/v1', teamRoutes);
 app.use('/api/v1', playerRoutes);
 app.use('/api/v1', matchRoutes);
+app.use('/api/v1', contactRoutes);
 
 // Start the server
 app.listen(3000, () => {

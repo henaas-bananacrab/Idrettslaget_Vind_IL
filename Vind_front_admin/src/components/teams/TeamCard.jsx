@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { teamApi, playerApi } from '../../services/api';
+import { teamApi, playerApi, contactApi } from '../../services/api';
 import AddNewPlayer from './AddNewPlayer';
+import AddNewContact from './AddNewContact';
 
 function TeamCard({ team, refreshTeams }) {
     const [players, setPlayers] = useState([]);
+    const [contacts, setContacts] = useState([]);
     const [showPlayers, setShowPlayers] = useState(false);
+    const [showContacts, setShowContacts] = useState(false);
 
     const handleDeleteTeam = async () => {
         if (!window.confirm('Delete this team and its roster?')) {
@@ -45,8 +48,20 @@ function TeamCard({ team, refreshTeams }) {
         }
     };
 
+    const fetchContacts = async () => {
+        try {
+            const response = await contactApi.getContactsByTeam(team.team_id);
+            const contactsData = response.data?.data || response.data || [];
+            setContacts(Array.isArray(contactsData) ? contactsData : []);
+        } catch (error) {
+            console.error('Error fetching contacts:', error);
+            setContacts([]);
+        }
+    };
+
     useEffect(() => {
         fetchPlayers();
+        fetchContacts();
     }, [team.team_id]);
 
     return (
@@ -56,6 +71,14 @@ function TeamCard({ team, refreshTeams }) {
             </div>
 
             <div className="card-body">
+                <h4 className="subtext">Kontakter</h4>
+                {contacts.length === 0 && <p className="subtext">No contacts registered yet.</p>}
+                {contacts.map((contact) => (
+                    <div className="contact-row" key={contact.contact_id}>
+                        <p>kontaktperson: {contact.contact_name}</p>
+                        <p>telefonnummer: {contact.contact_number}</p>
+                    </div>
+                ))}
                 <h4>Players</h4>
                 {players.length === 0 && <p className="subtext">No players registered yet.</p>}
                 {players.map((player) => (
@@ -76,6 +99,9 @@ function TeamCard({ team, refreshTeams }) {
                 <button className="button button-secondary" onClick={() => setShowPlayers(true)}>
                     Add New Player
                 </button>
+                <button className="button button-secondary" onClick={() => setShowContacts(true)}>
+                    Add New Contact
+                </button>
                 <button className="button button-danger" onClick={handleDeleteTeam}>
                     Delete Team
                 </button>
@@ -86,6 +112,14 @@ function TeamCard({ team, refreshTeams }) {
                     teamId={team.team_id}
                     onClose={() => setShowPlayers(false)}
                     refreshPlayers={fetchPlayers}
+                />
+            )}
+
+            {showContacts && (
+                <AddNewContact
+                    teamId={team.team_id}
+                    onClose={() => setShowContacts(false)}
+                    refreshContacts={fetchContacts}
                 />
             )}
         </div>
